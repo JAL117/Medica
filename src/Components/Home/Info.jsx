@@ -4,7 +4,7 @@ import { useSpring, animated } from 'react-spring';
 import { FaBuilding, FaUsers, FaChartLine, FaAward } from 'react-icons/fa';
 
 const Container = styled.div`
-  background-color: #f5f5f5;
+
   padding: 2rem;
   font-family: 'Arial', sans-serif;
 `;

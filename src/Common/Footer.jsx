@@ -26,7 +26,7 @@ const Footer = () => {
   };
 
   return (
-    <footer style={footerStyle}>
+    <footer style={footerStyle} className='mt-5'>
       <Container>
         <Row className="align-items-center">
           <Col md={4} className="text-center text-md-start mb-3 mb-md-0">

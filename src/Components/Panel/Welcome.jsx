@@ -9,7 +9,7 @@ const Container = styled.div`
   font-family: 'Arial', sans-serif;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 80%;
+  max-width: 90%;
   margin:5%;
 `;
 
@@ -173,7 +173,7 @@ const WelcomeComponent = ({ userName }) => {
         </StatCard>
       </StatContainer>
 
-      <h2>Próximas 5 Citas:</h2>
+      <h2 className='mt-5'>Próximas 5 Citas:</h2>
       {nextFiveAppointments.length > 0 ? (
         <AppointmentList>
           {nextFiveAppointments.map((apt, index) => (
