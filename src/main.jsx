@@ -7,6 +7,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Panel from "./pages/Panel";
+import Citas from "./pages/Citas"
+import VerCitas from "./pages/VerCitas";
 
 const router = createBrowserRouter([
   {
@@ -15,15 +17,15 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Panel />,
+        element: <Panel/>,
       },
       {
         path: "AgendarCitas",
-        element: <></>,
+        element:<Citas/>,
       },
       {
         path: "VerCitas",
-        element: <></>,
+        element:<VerCitas/>,
       },
     ],
   },

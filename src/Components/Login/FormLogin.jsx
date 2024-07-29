@@ -141,7 +141,7 @@ const FormLogin = () => {
             <BackButton type="button" onClick={handleBack}>
               Volver Atrás
             </BackButton>
-            <Button type="submit" as={Link} to="/Panel/Principal">Iniciar Sesión</Button>
+            <Button type="submit" as={Link} to="/Panel">Iniciar Sesión</Button>
           </div>
         </Form>
         <LinkContainer>

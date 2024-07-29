@@ -1,10 +1,11 @@
 import React from 'react';
-import NavbarComponent from '../Components/Panel/Navbar';
+import WelcomeComponent from '../Components/Panel/Welcome';
 
 const Panel = () => {
     return (
         <div>
-            <NavbarComponent/>
+         
+            <WelcomeComponent/>
         </div>
     );
 }

@@ -6,10 +6,10 @@ const Footer = () => {
   const footerStyle = {
     backgroundColor: '#4CAF50',
     color: 'white',
-    padding: '2rem 0',
+    padding: '3rem 0',
     marginTop: 'auto',
     width: '100%',
-    position: 'absolute',
+    position: 'relative',
     bottom: 0,
   };
 
