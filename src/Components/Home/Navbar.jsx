@@ -1,9 +1,9 @@
 import React from "react";
 import { Navbar, Nav, Button, Container, Image } from "react-bootstrap";
-import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
 import img from "../../img/MedicaNatura(Logo).png"
 import { Link } from "react-router-dom";
+import { FaBookMedical } from "react-icons/fa6";
 
 const NavbarComponent = () => {
   const navbarStyle = {
@@ -33,27 +33,12 @@ const NavbarComponent = () => {
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav className="me-3">
             <Button
-              variant="success"
-              style={{
-                ...buttonStyle,
-                backgroundColor: "#4CAF50",
-                borderColor: "#4CAF50",
-              }}
-              className="me-2"
-              as={Link}
-              to="/Register"
-            >
-              <FaUserPlus className="me-2" />
-              Registrarse
-            </Button>
-            <Button
               variant="outline-success"
               style={buttonStyle}
               as={Link}
               to="/login"
             >
-              <FaSignInAlt className="me-2" />
-              Iniciar Sesión
+              <FaBookMedical className="me-2" size={30}/>
             </Button>
           </Nav>
         </Navbar.Collapse>

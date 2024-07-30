@@ -1,14 +1,31 @@
 import React, { useState } from "react";
-import { Navbar, Nav, Button, Container, Image, Offcanvas } from "react-bootstrap";
-import { FaSignOutAlt, FaUser, FaCalendarPlus, FaCalendarAlt } from "react-icons/fa";
+import {
+  Navbar,
+  Nav,
+  Button,
+  Container,
+  Image,
+  Offcanvas,
+} from "react-bootstrap";
+import {
+  FaSignOutAlt,
+  FaUser,
+  FaCalendarPlus,
+  FaCalendarAlt,
+} from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
-import styled from 'styled-components';
+import styled from "styled-components";
 import { Link } from "react-router-dom";
 import img from "../../img/MedicaNatura(Logo).png";
+import { FaUserNurse } from "react-icons/fa";
+import { FaUserDoctor } from "react-icons/fa6";
+import { RiDashboardFill } from "react-icons/ri";
+import { MdHistory } from "react-icons/md";
+
 
 const StyledNavbar = styled(Navbar)`
-  background-color: #4CAF50;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  background-color: #4caf50;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 `;
 
 const StyledButton = styled(Button)`
@@ -37,7 +54,7 @@ const NavbarComponent = () => {
   const handleShow = () => setShowOffcanvas(true);
 
   return (
-    <>
+    <div style={{ textDecoration: "none" }}>
       <StyledNavbar expand="lg" variant="dark" className="py-2">
         <Container fluid>
           <Navbar.Brand as={Link} to="/" className="ms-3">
@@ -46,25 +63,39 @@ const NavbarComponent = () => {
               alt="Logo"
               height="80"
               className="d-inline-block align-top bg-white p-1"
-              style={{borderRadius:"25px"}}
+              style={{ borderRadius: "25px" }}
             />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-            <Nav className="me-3 align-items-center">
+          <Navbar.Collapse
+            id="basic-navbar-nav"
+            className="justify-content-center ms=5"
+          >
+            <Nav className="align-items-center">
+              <StyledButton as={Link} to="/panel">
+                <RiDashboardFill size={30}/>Inicio
+              </StyledButton>
+              <StyledButton as={Link} to="/Panel/RegistroDeAsistente">
+                <FaUserNurse size={30} /> Registrar asistente
+              </StyledButton>
               <StyledButton as={Link} to="/Panel/AgendarCitas">
-                <FaCalendarPlus /> Agendar cita
+                <FaCalendarPlus size={30} /> Agendar cita
               </StyledButton>
               <StyledButton as={Link} to="/Panel/VerCitas">
-                <FaCalendarAlt /> Ver citas 
+                <FaCalendarAlt size={30} /> Ver citas
               </StyledButton>
-              <StyledButton onClick={handleShow}>
-                <FaUser /> Usuario
-              </StyledButton>
-              <StyledButton as={Link} to="/">
-                <FaSignOutAlt /> Salir
+              <StyledButton as={Link} to="/Panel/HistorialDeCitas">
+                <MdHistory size={30}/>Historial de Citas
               </StyledButton>
             </Nav>
+          </Navbar.Collapse>
+          <Navbar.Collapse className="justify-content-end">
+            <StyledButton onClick={handleShow}>
+              <FaUserDoctor size={30} />
+            </StyledButton>
+            <StyledButton as={Link} to="/">
+              <FaSignOutAlt size={30} /> 
+            </StyledButton>
           </Navbar.Collapse>
         </Container>
       </StyledNavbar>
@@ -78,11 +109,10 @@ const NavbarComponent = () => {
             <h4>Nombre del Usuario</h4>
             <p>Email: usuario@example.com</p>
             <p>Rol: Secretaria</p>
-        
           </UserInfo>
         </Offcanvas.Body>
       </Offcanvas>
-    </>
+    </div>
   );
 };
 

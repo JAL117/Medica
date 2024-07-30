@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FaUser, FaCalendarCheck, FaClock, FaChartLine } from 'react-icons/fa';
+import { FaUser, FaCalendarCheck, FaClock, FaChartLine, FaPhone } from 'react-icons/fa';
 import axios from 'axios'; // Asegúrate de instalar axios: npm install axios
 
 const Container = styled.div`
   background-color: #f5f5f5;
-  padding: 2rem;
+  padding: 3rem;
   font-family: 'Arial', sans-serif;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   max-width: 90%;
-  margin:5%;
+  margin: 5%;
 `;
 
 const Header = styled.h1`
@@ -67,12 +67,43 @@ const AppointmentList = styled.ul`
 `;
 
 const AppointmentItem = styled.li`
-  background-color: #e8f5e9;
-  padding: 0.5rem;
-  border-radius: 4px;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+const AppointmentDate = styled.div`
+  font-weight: bold;
+  color: #4CAF50;
   margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  border: 1px solid #c8e6c9;
+`;
+
+const AppointmentDetails = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const AppointmentInfo = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const AppointmentIcon = styled.span`
+  margin-right: 0.5rem;
+  color: #666;
+`;
+
+const AppointmentText = styled.span`
+  color: #333;
 `;
 
 const LoadingMessage = styled.p`
@@ -166,19 +197,30 @@ const WelcomeComponent = ({ userName }) => {
           <StatTitle>Citas Próximas</StatTitle>
           <StatValue>{stats.upcomingAppointments}</StatValue>
         </StatCard>
-        <StatCard>
-          <StatIcon><FaChartLine /></StatIcon>
-          <StatTitle>Tasa de Ocupación</StatTitle>
-          <StatValue>{stats.occupancyRate}%</StatValue>
-        </StatCard>
       </StatContainer>
 
-      <h2 className='mt-5'>Próximas 5 Citas:</h2>
+      <h2 style={{ marginTop: '2rem', color: '#4CAF50' }}>Próximas 5 Citas:</h2>
       {nextFiveAppointments.length > 0 ? (
         <AppointmentList>
           {nextFiveAppointments.map((apt, index) => (
             <AppointmentItem key={index}>
-              {new Date(apt.date).toLocaleDateString()} - {apt.time}: {apt.name} ({apt.phone})
+              <AppointmentDate>
+                {new Date(apt.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+              </AppointmentDate>
+              <AppointmentDetails>
+                <AppointmentInfo>
+                  <AppointmentIcon><FaClock /></AppointmentIcon>
+                  <AppointmentText>{apt.time}</AppointmentText>
+                </AppointmentInfo>
+                <AppointmentInfo>
+                  <AppointmentIcon><FaUser /></AppointmentIcon>
+                  <AppointmentText>{apt.name}</AppointmentText>
+                </AppointmentInfo>
+                <AppointmentInfo>
+                  <AppointmentIcon><FaPhone /></AppointmentIcon>
+                  <AppointmentText>{apt.phone}</AppointmentText>
+                </AppointmentInfo>
+              </AppointmentDetails>
             </AppointmentItem>
           ))}
         </AppointmentList>

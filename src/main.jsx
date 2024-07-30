@@ -5,10 +5,12 @@ import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 import LayoutPanel from "./pages/Layouts/LayoutPanel";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import Panel from "./pages/Panel";
 import Citas from "./pages/Citas"
 import VerCitas from "./pages/VerCitas";
+import RegistroDeAsistente from "./pages/RegistroDeAsistente";
+import HistorialDeCitas from "./pages/HistorialDeCitas";
+
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,14 @@ const router = createBrowserRouter([
         path: "VerCitas",
         element:<VerCitas/>,
       },
+      {
+        path:"RegistroDeAsistente",
+        element:<RegistroDeAsistente/>
+      },
+      {
+        path:"HistorialDeCitas",
+        element:<HistorialDeCitas/>
+      }
     ],
   },
 
@@ -39,11 +49,8 @@ const router = createBrowserRouter([
   {
     path: "/Login",
     element: <Login />,
-  },
-  {
-    path: "/Register",
-    element: <Register />,
-  },
+  }
+
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
