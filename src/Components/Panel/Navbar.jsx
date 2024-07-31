@@ -60,8 +60,8 @@ const NavbarComponent = () => {
   const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('Data') || '[]')[1];
-    setUserRole(userData?.role);
+    const userData = JSON.parse(localStorage.getItem('user'));
+    setUserRole(userData.roleID);
   }, []);
 
   const handleClose = () => setShowOffcanvas(false);

@@ -131,7 +131,7 @@ const FormLogin = () => {
 
       if (response) {
         console.log(response.data.token[1].roleID);
-        localStorage.setItem("user", JSON.stringify(response.data.data));
+        localStorage.setItem("user", JSON.stringify(response.data.token[1]));
         navigate("/Panel");
       }
     } catch (error) {
