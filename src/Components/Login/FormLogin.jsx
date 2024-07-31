@@ -1,9 +1,12 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import { FaUserCircle } from "react-icons/fa";
 import { MdEmail, MdLock } from "react-icons/md";
 import { useNavigate } from "react-router-dom"; 
 import { Link } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const LoginContainer = styled.div`
   display: flex;
@@ -111,8 +114,44 @@ const LinkC = styled.a`
   }
 `;
 
+const MySwal = withReactContent(Swal);
+
 const FormLogin = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate(); 
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(`http://localhost:3000/api/user/login/`, {
+        email,
+        password,
+      });
+
+      if (response) {
+        console.log(response);
+        localStorage.setItem("user", JSON.stringify(response.data.data));
+        navigate("/Panel");
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response && error.response.status === 401) {
+        MySwal.fire(
+          "Error de autenticación",
+          "Credenciales incorrectas. Por favor, inténtalo de nuevo.",
+          "error"
+        );
+      } else {
+        MySwal.fire(
+          "Error",
+          "Ocurrió un error al intentar iniciar sesión. Por favor, inténtalo más tarde.",
+          "error"
+        );
+      }
+    }
+  };
+
 
   const handleBack = () => {
     navigate("/");
@@ -124,30 +163,32 @@ const FormLogin = () => {
         <Header>
           <UserIcon />
         </Header>
-        <Form>
+        <Form onSubmit={handleLogin}>
           <InputContainer>
             <InputIcon>
               <MdEmail />
             </InputIcon>
-            <Input type="email" placeholder="Correo electrónico" required />
+            <Input 
+            type="email" 
+            placeholder="Correo electrónico" required 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)}
+            />
           </InputContainer>
           <InputContainer>
             <InputIcon>
               <MdLock />
             </InputIcon>
-            <Input type="password" placeholder="Contraseña" required />
+            <Input type="password" 
+            placeholder="Contraseña" required 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            />
           </InputContainer>
           <div style={{ display: "flex", gap: "10px" }}>
-            <BackButton type="button" onClick={handleBack}>
-              Volver Atrás
-            </BackButton>
-            <Button type="submit" as={Link} to="/Panel">Iniciar Sesión</Button>
+            <Button type="submit">Iniciar Sesión</Button>
           </div>
         </Form>
-        <LinkContainer>
-          <LinkC >¿Olvidaste tu contraseña?</LinkC>
-          <LinkC as={Link} to="/Register">¿No tienes una cuenta?</LinkC>
-        </LinkContainer>
       </LoginBox>
     </LoginContainer>
   );

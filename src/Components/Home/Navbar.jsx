@@ -32,14 +32,6 @@ const NavbarComponent = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav className="me-3">
-            <Button
-              variant="outline-success"
-              style={buttonStyle}
-              as={Link}
-              to="/login"
-            >
-              <FaBookMedical className="me-2" size={30}/>
-            </Button>
           </Nav>
         </Navbar.Collapse>
       </Container>
