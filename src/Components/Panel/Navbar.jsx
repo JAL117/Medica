@@ -103,12 +103,6 @@ const NavbarComponent = () => {
                   <StyledButton as={Link} to="/Panel/RegistroDeAsistente">
                     <FaUserNurse size={24} /> Registrar asistente
                   </StyledButton>
-                  <StyledButton as={Link} to="/Panel/HistorialDeCitas">
-                    <LuCalendarClock size={24}/>Historial de Citas
-                  </StyledButton>
-                  <StyledButton as={Link} to="/Panel/ReporteClinico">
-                    <TbReportMedical size={24}/> Reporte clínico
-                  </StyledButton>
                 </>
               )}
             </Nav>
