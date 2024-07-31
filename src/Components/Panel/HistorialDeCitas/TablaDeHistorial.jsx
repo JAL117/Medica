@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaEye } from 'react-icons/fa';
 import Swal from 'sweetalert2';
@@ -15,9 +15,9 @@ const TableContainer = styled.div`
   width: 100%;
   max-width: 80%;
   padding: 1rem;
-  background-color: #ffffff;
+  background-color: #f5f5f5;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 `;
 
 const Table = styled.table`
@@ -69,38 +69,56 @@ const Title = styled.h2`
 `;
 
 const TablaDeHistorial = () => {
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      title: 'Juan Perez',
-      start: new Date('2024-07-29T10:00'),
-      end: new Date('2024-07-29T11:00'),
-      phone: '555-1234',
-    },
-    {
-      id: 2,
-      title: 'Maria Gomez',
-      start: new Date('2024-07-30T14:00'),
-      end: new Date('2024-07-30T15:00'),
-      phone: '555-5678',
-    },
-    {
-      id: 3,
-      title: 'Carlos Sanchez',
-      start: new Date('2024-07-31T09:00'),
-      end: new Date('2024-07-31T10:00'),
-      phone: '555-8765',
-    },
-  ]);
+  const [historialCitas, setHistorialCitas] = useState([]);
+
+  useEffect(() => {
+    // Simulación de una llamada a API
+    const fetchHistorialCitas = async () => {
+      // Simular un retraso de red
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const citasSimuladas = [
+        {
+          id: 1,
+          title: 'Juan Perez',
+          start: new Date('2024-06-29T10:00'),
+          end: new Date('2024-06-29T11:00'),
+          phone: '555-1234',
+          status: 'Finalizada'
+        },
+        {
+          id: 2,
+          title: 'Maria Gomez',
+          start: new Date('2024-06-30T14:00'),
+          end: new Date('2024-06-30T15:00'),
+          phone: '555-5678',
+          status: 'Finalizada'
+        },
+        {
+          id: 3,
+          title: 'Carlos Sanchez',
+          start: new Date('2024-07-01T09:00'),
+          end: new Date('2024-07-01T10:00'),
+          phone: '555-8765',
+          status: 'Finalizada'
+        },
+      ];
+
+      setHistorialCitas(citasSimuladas);
+    };
+
+    fetchHistorialCitas();
+  }, []);
 
   const handleView = (appointment) => {
     Swal.fire({
-      title: `<strong>Detalles de la Cita</strong>`,
+      title: `<strong>Detalles de la Cita Finalizada</strong>`,
       html: `
         <p><b>Nombre:</b> ${appointment.title}</p>
         <p><b>Fecha:</b> ${appointment.start.toLocaleDateString()}</p>
         <p><b>Hora:</b> ${appointment.start.toLocaleTimeString()}</p>
         <p><b>Teléfono:</b> ${appointment.phone}</p>
+        <p><b>Estado:</b> ${appointment.status}</p>
       `,
       confirmButtonText: 'Cerrar'
     });
@@ -109,7 +127,7 @@ const TablaDeHistorial = () => {
   return (
     <Container>
       <TableContainer>
-        <Title>Lista de Citas</Title>
+        <Title>Historial de Citas</Title>
         <Table>
           <thead>
             <tr>
@@ -118,17 +136,19 @@ const TablaDeHistorial = () => {
               <TableHeader>Fecha</TableHeader>
               <TableHeader>Hora</TableHeader>
               <TableHeader>Teléfono</TableHeader>
+              <TableHeader>Estado</TableHeader>
               <TableHeader>Acciones</TableHeader>
             </tr>
           </thead>
           <tbody>
-            {appointments.map((appointment, index) => (
+            {historialCitas.map((appointment, index) => (
               <TableRow key={appointment.id}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{appointment.title}</TableCell>
                 <TableCell>{appointment.start.toLocaleDateString()}</TableCell>
                 <TableCell>{appointment.start.toLocaleTimeString()}</TableCell>
                 <TableCell>{appointment.phone}</TableCell>
+                <TableCell>{appointment.status}</TableCell>
                 <TableCell>
                   <Button bgColor="#FFD700" hoverColor="#FFC107" onClick={() => handleView(appointment)}>
                     <FaEye /> Ver

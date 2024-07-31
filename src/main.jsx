@@ -10,6 +10,8 @@ import Citas from "./pages/Citas"
 import VerCitas from "./pages/VerCitas";
 import RegistroDeAsistente from "./pages/RegistroDeAsistente";
 import HistorialDeCitas from "./pages/HistorialDeCitas";
+import ReportesClinicos from "./pages/ReportesClinicos";
+
 
 
 const router = createBrowserRouter([
@@ -36,7 +38,12 @@ const router = createBrowserRouter([
       {
         path:"HistorialDeCitas",
         element:<HistorialDeCitas/>
-      }
+      },
+      {
+        path:"ReporteClinico",
+        element:<ReportesClinicos/>
+      },
+ 
     ],
   },
 

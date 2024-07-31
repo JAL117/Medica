@@ -20,8 +20,9 @@ import img from "../../img/MedicaNatura(Logo).png";
 import { FaUserNurse } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
 import { RiDashboardFill } from "react-icons/ri";
-import { MdHistory } from "react-icons/md";
-
+import { TbReport } from "react-icons/tb";
+import { LuCalendarClock } from "react-icons/lu";
+import { TbReportMedical } from "react-icons/tb";
 
 const StyledNavbar = styled(Navbar)`
   background-color: #4caf50;
@@ -85,8 +86,12 @@ const NavbarComponent = () => {
                 <FaCalendarAlt size={30} /> Ver citas
               </StyledButton>
               <StyledButton as={Link} to="/Panel/HistorialDeCitas">
-                <MdHistory size={30}/>Historial de Citas
+                <LuCalendarClock size={30}/>Historial de Citas
               </StyledButton>
+              <StyledButton as={Link} to="/Panel/ReporteClinico">
+                 <TbReportMedical size={30}/> Reporte clinico
+              </StyledButton>
+        
             </Nav>
           </Navbar.Collapse>
           <Navbar.Collapse className="justify-content-end">

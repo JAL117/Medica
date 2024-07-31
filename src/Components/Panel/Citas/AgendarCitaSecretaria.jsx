@@ -26,8 +26,12 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 5rem;
+  margin: 100px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   font-family: 'Arial', sans-serif;
   height: 100hv;
+  background-color: #f5f5f5;
 
   @media (min-width: 768px) {
     flex-direction: row;

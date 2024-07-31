@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import Swal from 'sweetalert2';
@@ -9,16 +9,15 @@ const Container = styled.div`
   align-items: center;
   height: 40vh;
   margin-top:0px;
-
 `;
 
 const TableContainer = styled.div`
   width: 100%;
   max-width: 80%;
   padding: 1rem;
-  background-color: #ffffff;
+  background-color: #f5f5f5;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 `;
 
 const Table = styled.table`
@@ -77,6 +76,7 @@ const AppointmentView = () => {
       start: new Date('2024-07-29T10:00'),
       end: new Date('2024-07-29T11:00'),
       phone: '555-1234',
+      status: 'Pendiente'
     },
     {
       id: 2,
@@ -84,6 +84,7 @@ const AppointmentView = () => {
       start: new Date('2024-07-30T14:00'),
       end: new Date('2024-07-30T15:00'),
       phone: '555-5678',
+      status: 'Pendiente'
     },
     {
       id: 3,
@@ -91,8 +92,27 @@ const AppointmentView = () => {
       start: new Date('2024-07-31T09:00'),
       end: new Date('2024-07-31T10:00'),
       phone: '555-8765',
+      status: 'Pendiente'
     },
   ]);
+
+  const updateAppointmentStatus = () => {
+    const now = new Date();
+    const updatedAppointments = appointments.map(appointment => {
+      if (appointment.start <= now && now < appointment.end) {
+        return { ...appointment, status: 'En curso' };
+      } else if (appointment.start > now) {
+        return { ...appointment, status: 'Pendiente' };
+      }
+      return appointment;
+    });
+    setAppointments(updatedAppointments);
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(updateAppointmentStatus, 60000); // Actualiza cada minuto
+    return () => clearInterval(intervalId);
+  }, [appointments]);
 
   const handleEdit = (appointment) => {
     Swal.fire({
@@ -102,6 +122,11 @@ const AppointmentView = () => {
         <input id="date" type="date" class="swal2-input" value="${appointment.start.toISOString().substr(0, 10)}">
         <input id="time" type="time" class="swal2-input" value="${appointment.start.toTimeString().substr(0, 5)}">
         <input id="phone" type="tel" class="swal2-input" placeholder="Teléfono" value="${appointment.phone}">
+        <select id="status" class="swal2-select">
+          <option value="Pendiente" ${appointment.status === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+          <option value="En curso" ${appointment.status === 'En curso' ? 'selected' : ''}>En curso</option>
+          <option value="Finalizada" ${appointment.status === 'Finalizada' ? 'selected' : ''}>Finalizada</option>
+        </select>
       `,
       showCancelButton: true,
       confirmButtonText: 'Guardar',
@@ -111,17 +136,18 @@ const AppointmentView = () => {
         const date = Swal.getPopup().querySelector('#date').value;
         const time = Swal.getPopup().querySelector('#time').value;
         const phone = Swal.getPopup().querySelector('#phone').value;
-        if (!name || !date || !time || !phone) {
+        const status = Swal.getPopup().querySelector('#status').value;
+        if (!name || !date || !time || !phone || !status) {
           Swal.showValidationMessage(`Por favor ingresa todos los datos`);
           return false;
         }
-        return { name, date, time, phone };
+        return { name, date, time, phone, status };
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        const { name, date, time, phone } = result.value;
+        const { name, date, time, phone, status } = result.value;
         const updatedAppointments = appointments.map(a =>
-          a.id === appointment.id ? { ...a, title: name, start: new Date(`${date}T${time}`), end: new Date(`${date}T${time}`), phone } : a
+          a.id === appointment.id ? { ...a, title: name, start: new Date(`${date}T${time}`), end: new Date(`${date}T${time}`), phone, status } : a
         );
         setAppointments(updatedAppointments);
         Swal.fire('Guardado', 'La cita ha sido actualizada', 'success');
@@ -132,17 +158,22 @@ const AppointmentView = () => {
   const handleDelete = (appointment) => {
     Swal.fire({
       title: '¿Estás seguro?',
-      text: 'No podrás revertir esto!',
+      text: 'Esto marcará la cita como finalizada y la moverá al historial.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminar!',
+      confirmButtonText: 'Sí, finalizar!',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        setAppointments(appointments.filter(a => a.id !== appointment.id));
-        Swal.fire('Eliminado!', 'La cita ha sido eliminada.', 'success');
+        const updatedAppointments = appointments.map(a => 
+          a.id === appointment.id ? { ...a, status: 'Finalizada' } : a
+        );
+        setAppointments(updatedAppointments);
+        // Aquí podrías enviar los datos a tu historial
+        // sendToHistory(appointment);
+        Swal.fire('Finalizada!', 'La cita ha sido marcada como finalizada y movida al historial.', 'success');
       }
     });
   };
@@ -155,6 +186,7 @@ const AppointmentView = () => {
         <p><b>Fecha:</b> ${appointment.start.toLocaleDateString()}</p>
         <p><b>Hora:</b> ${appointment.start.toLocaleTimeString()}</p>
         <p><b>Teléfono:</b> ${appointment.phone}</p>
+        <p><b>Estado:</b> ${appointment.status}</p>
       `,
       confirmButtonText: 'Cerrar'
     });
@@ -172,6 +204,7 @@ const AppointmentView = () => {
               <TableHeader>Fecha</TableHeader>
               <TableHeader>Hora</TableHeader>
               <TableHeader>Teléfono</TableHeader>
+              <TableHeader>Estado</TableHeader>
               <TableHeader>Acciones</TableHeader>
             </tr>
           </thead>
@@ -183,6 +216,7 @@ const AppointmentView = () => {
                 <TableCell>{appointment.start.toLocaleDateString()}</TableCell>
                 <TableCell>{appointment.start.toLocaleTimeString()}</TableCell>
                 <TableCell>{appointment.phone}</TableCell>
+                <TableCell>{appointment.status}</TableCell>
                 <TableCell>
                   <Button bgColor="#FFD700" hoverColor="#FFC107" onClick={() => handleView(appointment)}>
                     <FaEye /> Ver
@@ -191,7 +225,7 @@ const AppointmentView = () => {
                     <FaEdit /> Editar
                   </Button>
                   <Button bgColor="#f44336" hoverColor="#e53935" onClick={() => handleDelete(appointment)}>
-                    <FaTrash /> Eliminar
+                    <FaTrash /> Finalizar
                   </Button>
                 </TableCell>
               </TableRow>

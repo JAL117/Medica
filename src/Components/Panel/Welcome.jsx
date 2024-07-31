@@ -8,7 +8,7 @@ const Container = styled.div`
   padding: 3rem;
   font-family: 'Arial', sans-serif;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   max-width: 90%;
   margin: 5%;
 `;
