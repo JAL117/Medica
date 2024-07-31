@@ -1,18 +1,27 @@
 import React from 'react';
 import NavbarComponent from '../Components/Home/Navbar';
-import Footer from '../Components/Home/Footer';
-import CarouselComponent from '../Components/Home/Courusel';
-import Info from '../Components/Home/Info';
 
-const Home = () => {
-    return (
-        <div style={{height:"100hv"}}>
-            <NavbarComponent/>
-            <CarouselComponent/>
-            <Info/>
-            <Footer/>
-        </div>
-    );
+import CarouselComponent from '../Components/Home/Courusel';
+import ServicesComponent from '../Components/Home/Servicescompoent';
+import Info from '../Components/Home/Info';
+import TestimonialsComponent from '../Components/Home/TestimoniosComponent';
+import LocationSection from '../Components/Home/LocationSetion';
+import Footer from '../Components/Home/Footer';
+
+
+function App() {
+  return (
+    <>
+      <NavbarComponent />
+  
+      <CarouselComponent />
+      <ServicesComponent />
+      <Info />
+      <TestimonialsComponent />
+      <LocationSection />
+      <Footer />
+    </>
+  );
 }
 
-export default Home;
+export default App;
