@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { FaUser, FaEnvelope, FaLock, FaPhone, FaTrash, FaUserPlus } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import { Password } from '@mui/icons-material';
 
 const Container = styled.div`
   max-width: 90%;
@@ -134,11 +135,11 @@ const DeleteButton = styled.button`
 
 const RegistroAsistente = () => {
   const [formData, setFormData] = useState({
-    nombre: '',
-    apellidos: '',
-    telefono: '',
+    names: '',
+    last_name: '',
+    phone_number: '',
     email: '',
-    contrasena: '',
+    password: '',
     confirmarContrasena: '',
     rol: 2
   });
@@ -150,7 +151,7 @@ const RegistroAsistente = () => {
 
   const fetchAsistentes = async () => {
     try {
-      const response = await axios.get('https://api.example.com/asistentes');
+      const response = await axios.get('http://api.example.com/asistentes');
       setAsistentes(response.data);
     } catch (error) {
       console.error('Error al obtener asistentes:', error);
