@@ -72,9 +72,7 @@ const TablaDeHistorial = () => {
   const [historialCitas, setHistorialCitas] = useState([]);
 
   useEffect(() => {
-    // Simulación de una llamada a API
     const fetchHistorialCitas = async () => {
-      // Simular un retraso de red
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       const citasSimuladas = [

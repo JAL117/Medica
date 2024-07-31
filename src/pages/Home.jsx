@@ -1,6 +1,6 @@
 import React from 'react';
 import NavbarComponent from '../Components/Home/Navbar';
-import Footer from '../Common/Footer';
+import Footer from '../Components/Home/Footer';
 import CarouselComponent from '../Components/Home/Courusel';
 import Info from '../Components/Home/Info';
 

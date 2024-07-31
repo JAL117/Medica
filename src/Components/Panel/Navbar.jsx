@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Navbar,
   Nav,
@@ -9,20 +9,18 @@ import {
 } from "react-bootstrap";
 import {
   FaSignOutAlt,
-  FaUser,
   FaCalendarPlus,
   FaCalendarAlt,
+  FaUserNurse
 } from "react-icons/fa";
+import { FaUserDoctor } from "react-icons/fa6";
+import { RiDashboardFill } from "react-icons/ri";
+import { TbReportMedical } from "react-icons/tb";
+import { LuCalendarClock } from "react-icons/lu";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import img from "../../img/MedicaNatura(Logo).png";
-import { FaUserNurse } from "react-icons/fa";
-import { FaUserDoctor } from "react-icons/fa6";
-import { RiDashboardFill } from "react-icons/ri";
-import { TbReport } from "react-icons/tb";
-import { LuCalendarClock } from "react-icons/lu";
-import { TbReportMedical } from "react-icons/tb";
 
 const StyledNavbar = styled(Navbar)`
   background-color: #4caf50;
@@ -32,15 +30,24 @@ const StyledNavbar = styled(Navbar)`
 const StyledButton = styled(Button)`
   transition: all 0.3s ease;
   border-radius: 20px;
-  padding: 8px 16px;
+  padding: 10px 20px;
   font-size: 1rem;
   background-color: #45a049;
   border: none;
   color: white;
-  margin-left: 10px;
+  margin: 5px;
+  width: 180px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background-color: #367c39;
+  }
+
+  svg {
+    margin-right: 8px;
   }
 `;
 
@@ -50,9 +57,18 @@ const UserInfo = styled.div`
 
 const NavbarComponent = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('Data') || '[]')[1];
+    setUserRole(userData?.role);
+  }, []);
 
   const handleClose = () => setShowOffcanvas(false);
   const handleShow = () => setShowOffcanvas(true);
+
+  const isDoctor = userRole === 1;
+  const isAssistant = userRole === 2;
 
   return (
     <div style={{ textDecoration: "none" }}>
@@ -70,36 +86,39 @@ const NavbarComponent = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse
             id="basic-navbar-nav"
-            className="justify-content-center ms=5"
+            className="justify-content-center ms-5"
           >
             <Nav className="align-items-center">
               <StyledButton as={Link} to="/panel">
-                <RiDashboardFill size={30}/>Inicio
-              </StyledButton>
-              <StyledButton as={Link} to="/Panel/RegistroDeAsistente">
-                <FaUserNurse size={30} /> Registrar asistente
+                <RiDashboardFill size={24}/>Inicio
               </StyledButton>
               <StyledButton as={Link} to="/Panel/AgendarCitas">
-                <FaCalendarPlus size={30} /> Agendar cita
+                <FaCalendarPlus size={24} /> Agendar cita
               </StyledButton>
               <StyledButton as={Link} to="/Panel/VerCitas">
-                <FaCalendarAlt size={30} /> Ver citas
+                <FaCalendarAlt size={24} /> Ver citas
               </StyledButton>
-              <StyledButton as={Link} to="/Panel/HistorialDeCitas">
-                <LuCalendarClock size={30}/>Historial de Citas
-              </StyledButton>
-              <StyledButton as={Link} to="/Panel/ReporteClinico">
-                 <TbReportMedical size={30}/> Reporte clinico
-              </StyledButton>
-        
+              {isDoctor && (
+                <>
+                  <StyledButton as={Link} to="/Panel/RegistroDeAsistente">
+                    <FaUserNurse size={24} /> Registrar asistente
+                  </StyledButton>
+                  <StyledButton as={Link} to="/Panel/HistorialDeCitas">
+                    <LuCalendarClock size={24}/>Historial de Citas
+                  </StyledButton>
+                  <StyledButton as={Link} to="/Panel/ReporteClinico">
+                    <TbReportMedical size={24}/> Reporte clínico
+                  </StyledButton>
+                </>
+              )}
             </Nav>
           </Navbar.Collapse>
           <Navbar.Collapse className="justify-content-end">
             <StyledButton onClick={handleShow}>
-              <FaUserDoctor size={30} />
+              <FaUserDoctor size={24} />
             </StyledButton>
             <StyledButton as={Link} to="/">
-              <FaSignOutAlt size={30} /> 
+              <FaSignOutAlt size={24} /> 
             </StyledButton>
           </Navbar.Collapse>
         </Container>
@@ -113,7 +132,7 @@ const NavbarComponent = () => {
           <UserInfo>
             <h4>Nombre del Usuario</h4>
             <p>Email: usuario@example.com</p>
-            <p>Rol: Secretaria</p>
+            <p>Rol: {isDoctor ? 'Doctor' : isAssistant ? 'Asistente' : 'No definido'}</p>
           </UserInfo>
         </Offcanvas.Body>
       </Offcanvas>

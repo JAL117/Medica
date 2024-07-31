@@ -11,7 +11,6 @@ import {
   Edit as EditIcon
 } from '@mui/icons-material';
 
-// Estilos para el modal
 const modalStyle = {
   position: 'absolute',
   top: '50%',
@@ -82,7 +81,7 @@ const HistorialClinico = () => {
   return (
     <div style={{ 
       marginLeft:"5%", 
-      height: "50vh",
+      height: "auto",
       marginTop:"5%",
       width: "100%",
       maxWidth: "90%",
