@@ -135,13 +135,17 @@ const DeleteButton = styled.button`
 
 const RegistroAsistente = () => {
   const [formData, setFormData] = useState({
-    names: '',
-    last_name: '',
-    phone_number: '',
-    email: '',
-    password: '',
-    confirmarContrasena: '',
-    rol: 2
+    "secretary":{
+      doctorID:'1',
+      roleID: '2'
+    },
+    "user":{
+      names: '',
+      last_name: '',
+      password: '',
+      email: '',
+      phone_number: ''
+    }
   });
   const [asistentes, setAsistentes] = useState([]);
 
@@ -151,7 +155,7 @@ const RegistroAsistente = () => {
 
   const fetchAsistentes = async () => {
     try {
-      const response = await axios.get('http://api.example.com/asistentes');
+      const response = await axios.get('http://localhost:3000/api/doctor/asistente/');
       setAsistentes(response.data);
     } catch (error) {
       console.error('Error al obtener asistentes:', error);
@@ -161,48 +165,17 @@ const RegistroAsistente = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    const [parentKey, childKey] = name.split('.');
     setFormData(prevState => ({
       ...prevState,
-      [name]: value
+      [parentKey]: {
+        ...prevState[parentKey],
+        [childKey]: value
+      }
     }));
   };
 
-  const validarFormulario = () => {
-    const { nombre, apellidos, telefono, email, contrasena, confirmarContrasena } = formData;
-
-    if (!/^[a-zA-Z\s]+$/.test(nombre)) {
-      mostrarError('El nombre debe contener solo letras');
-      return false;
-    }
-
-    if (!/^[a-zA-Z\s]+$/.test(apellidos)) {
-      mostrarError('Los apellidos deben contener solo letras');
-      return false;
-    }
-
-    if (!/^\d{10}$/.test(telefono)) {
-      mostrarError('El teléfono debe contener exactamente 10 dígitos');
-      return false;
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      mostrarError('El email no es válido');
-      return false;
-    }
-
-    if (contrasena.length < 8) {
-      mostrarError('La contraseña debe tener al menos 8 caracteres');
-      return false;
-    }
-
-    if (contrasena !== confirmarContrasena) {
-      mostrarError('Las contraseñas no coinciden');
-      return false;
-    }
-
-    return true;
-  };
-
+  
   const mostrarError = (mensaje) => {
     Swal.fire({
       icon: 'error',
@@ -213,9 +186,8 @@ const RegistroAsistente = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validarFormulario()) {
       try {
-        await axios.post('https://api.example.com/asistentes', formData);
+        await axios.post('http://localhost:3000/api/doctor/asistente/', formData);
         Swal.fire({
           icon: 'success',
           title: '¡Registro exitoso!',
@@ -223,19 +195,23 @@ const RegistroAsistente = () => {
         });
         fetchAsistentes();
         setFormData({
-          nombre: '',
-          apellidos: '',
-          telefono: '',
-          email: '',
-          contrasena: '',
-          confirmarContrasena: '',
-          rol: 2
+          "secretary":{
+            doctorID:'1',
+            roleID: '2'
+          },
+          "user":{
+            names: '',
+            last_name: '',
+            password: '',
+            email: '',
+            phone_number: ''
+          }
         });
       } catch (error) {
         console.error('Error al registrar asistente:', error);
         mostrarError('No se pudo registrar el asistente');
       }
-    }
+    
   };
 
   const handleDelete = async (id) => {
@@ -264,9 +240,9 @@ const RegistroAsistente = () => {
               <Icon><FaUser /></Icon>
               <Input
                 type="text"
-                id="nombre"
-                name="nombre"
-                value={formData.nombre}
+                id="user.names"
+                name="user.names"
+                value={formData.user.names}
                 onChange={handleChange}
                 required
               />
@@ -278,9 +254,9 @@ const RegistroAsistente = () => {
               <Icon><FaUser /></Icon>
               <Input
                 type="text"
-                id="apellidos"
-                name="apellidos"
-                value={formData.apellidos}
+                id="user.last_name"
+                name="user.last_name"
+                value={formData.user.last_name}
                 onChange={handleChange}
                 required
               />
@@ -292,9 +268,9 @@ const RegistroAsistente = () => {
               <Icon><FaPhone /></Icon>
               <Input
                 type="tel"
-                id="telefono"
-                name="telefono"
-                value={formData.telefono}
+                id="user.phone_number"
+                name="user.phone_number"
+                value={formData.user.phone_number}
                 onChange={handleChange}
                 required
               />
@@ -306,9 +282,9 @@ const RegistroAsistente = () => {
               <Icon><FaEnvelope /></Icon>
               <Input
                 type="email"
-                id="email"
-                name="email"
-                value={formData.email}
+                id="user.email"
+                name="user.email"
+                value={formData.user.email}
                 onChange={handleChange}
                 required
               />
@@ -320,23 +296,9 @@ const RegistroAsistente = () => {
               <Icon><FaLock /></Icon>
               <Input
                 type="password"
-                id="contrasena"
-                name="contrasena"
-                value={formData.contrasena}
-                onChange={handleChange}
-                required
-              />
-            </InputWrapper>
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="confirmarContrasena">Confirmar Contraseña</Label>
-            <InputWrapper>
-              <Icon><FaLock /></Icon>
-              <Input
-                type="password"
-                id="confirmarContrasena"
-                name="confirmarContrasena"
-                value={formData.confirmarContrasena}
+                id="user.password"
+                name="user.password"
+                value={formData.user.password}
                 onChange={handleChange}
                 required
               />
@@ -360,10 +322,10 @@ const RegistroAsistente = () => {
           </thead>
           <tbody>
             {asistentes.map((asistente) => (
-              <tr key={asistente.id}>
-                <Td>{asistente.nombre}</Td>
-                <Td>{asistente.apellidos}</Td>
-                <Td>{asistente.telefono}</Td>
+              <tr key={asistente.userID}>
+                <Td>{asistente.names}</Td>
+                <Td>{asistente.last_name}</Td>
+                <Td>{asistente.phone_number}</Td>
                 <Td>{asistente.email}</Td>
                 <Td>
                   <DeleteButton onClick={() => handleDelete(asistente.id)}>
