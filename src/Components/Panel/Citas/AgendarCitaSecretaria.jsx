@@ -5,6 +5,7 @@ import format from 'date-fns/format';
 import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
+import axios from 'axios';
 import enUS from 'date-fns/locale/en-US';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { FaCalendarAlt, FaUser, FaClock, FaPhone } from 'react-icons/fa';
@@ -110,8 +111,9 @@ const AppointmentView = () => {
   const [formData, setFormData] = useState({
     name: '',
     date: '',
-    time: '',
-    phone: '',
+    phone_number: '',
+    last_name: '',
+    email: '',
   });
 
   const handleInputChange = (e) => {
@@ -119,16 +121,45 @@ const AppointmentView = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newAppointment = {
       title: formData.name,
-      start: new Date(`${formData.date}T${formData.time}`),
-      end: new Date(`${formData.date}T${formData.time}`),
-      phone: formData.phone,
+      start: new Date(`${formData.date}`),
+      end: new Date(`${formData.date}`),
+      phone: formData.phone_number,
     };
     setAppointments([...appointments, newAppointment]);
-    setFormData({ name: '', date: '', time: '', phone: '' });
+
+    const appointmentData = {
+      cita: {
+        doctorID: '1',
+        fecha: formData.date,
+        estado: 'Pendiente',
+      },
+      paciente: {
+        names: formData.name,
+        last_name: formData.last_name,
+        password: '',
+        email: formData.email,
+        phone_number: formData.phone_number,
+      },
+    };
+
+    try {
+      const response = await axios.post('http://localhost:3000/api/medicalAppoinet/', {appointmentData});
+
+      if (!response.ok) {
+        throw new Error('Error al agendar cita', response);
+      }
+
+      const result = await response.json();
+      console.log('Cita agendada:', result);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
+    setFormData({ name: '', date: '', time: '', phone_number: '', last_name: '', email: '' });
   };
 
   return (
@@ -150,6 +181,32 @@ const AppointmentView = () => {
             />
           </FormGroup>
           <FormGroup>
+            <Label htmlFor="last_name">
+              <Icon><FaUser /></Icon>Apellido
+            </Label>
+            <Input
+              type="text"
+              id="last_name"
+              name="last_name"
+              value={formData.last_name}
+              onChange={handleInputChange}
+              required
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="email">
+              <Icon><FaUser /></Icon>Email
+            </Label>
+            <Input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+          </FormGroup>
+          <FormGroup>
             <Label htmlFor="date">
               <Icon><FaCalendarAlt /></Icon>Fecha
             </Label>
@@ -163,27 +220,14 @@ const AppointmentView = () => {
             />
           </FormGroup>
           <FormGroup>
-            <Label htmlFor="time">
-              <Icon><FaClock /></Icon>Hora
-            </Label>
-            <Input
-              type="time"
-              id="time"
-              name="time"
-              value={formData.time}
-              onChange={handleInputChange}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="phone">
+            <Label htmlFor="phone_number">
               <Icon><FaPhone /></Icon>Teléfono
             </Label>
             <Input
               type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
+              id="phone_number"
+              name="phone_number"
+              value={formData.phone_number}
               onChange={handleInputChange}
               required
             />

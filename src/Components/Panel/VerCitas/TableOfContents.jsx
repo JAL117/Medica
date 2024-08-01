@@ -9,7 +9,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 40vh;
-  margin-top:0px;
+  margin-top: 0px;
 `;
 
 const TableContainer = styled.div`
@@ -75,7 +75,6 @@ const AppointmentView = () => {
   useEffect(() => {
     axios.get('http://localhost:3000/api/medicalAppoinet/')
       .then(response => {
-        console.log(response);
         setAppointments(response.data);
       })
       .catch(error => {
@@ -89,9 +88,9 @@ const AppointmentView = () => {
       const start = new Date(appointment.start);
       const end = new Date(appointment.end);
       if (start <= now && now < end) {
-        return { ...appointment, status: 'En curso' };
+        return { ...appointment, estado: 'En curso' };
       } else if (start > now) {
-        return { ...appointment, status: 'Pendiente' };
+        return { ...appointment, estado: 'Pendiente' };
       }
       return appointment;
     });
@@ -99,7 +98,7 @@ const AppointmentView = () => {
   };
 
   useEffect(() => {
-    const intervalId = setInterval(updateAppointmentStatus, 60000); // Actualiza cada minuto
+    const intervalId = setInterval(updateAppointmentStatus, 60000);
     return () => clearInterval(intervalId);
   }, [appointments]);
 
@@ -107,10 +106,8 @@ const AppointmentView = () => {
     Swal.fire({
       title: 'Editar Cita',
       html: `
-        <input id="name" class="swal2-input" placeholder="Nombre" value="${appointment.names}">
-        <input id="date" type="date" class="swal2-input" value="${appointment.fecha}">
-        <input id="phone" type="tel" class="swal2-input" placeholder="Teléfono" value="${appointment.phone_number}">
-        <select id="status" class="swal2-select">
+        <input id="fecha" type="date" class="swal2-input" value="${appointment.fecha}">
+        <select id="estado" class="swal2-select">
           <option value="Pendiente" ${appointment.estado === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
           <option value="En curso" ${appointment.estado === 'En curso' ? 'selected' : ''}>En curso</option>
           <option value="Finalizada" ${appointment.estado === 'Finalizada' ? 'selected' : ''}>Finalizada</option>
@@ -118,15 +115,35 @@ const AppointmentView = () => {
       `,
       showCancelButton: true,
       confirmButtonText: 'Guardar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
+      preConfirm: () => {
+        return {
+          fecha: document.getElementById('fecha').value,
+          estado: document.getElementById('estado').value
+        }
+      }
     }).then((result) => {
       if (result.isConfirmed) {
-        const { name, date, time, phone, status } = result.value;
-        const updatedAppointments = appointments.map(a =>
-          a.id === appointment.id ? { ...a, title: name, start: new Date(`${date}T${time}`), end: new Date(`${date}T${time}`), phone, status } : a
-        );
-        setAppointments(updatedAppointments);
-        Swal.fire('Guardado', 'La cita ha sido actualizada', 'success');
+        const { fecha, estado } = result.value;
+        axios.put('http://localhost:3000/api/medicalAppoinet/', {
+          citaID: appointment.citaID,
+          estado,
+          fecha
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => {
+          setAppointments(appointments.map(a => 
+            a.citaID === appointment.citaID ? { ...a, fecha, estado } : a
+          ));
+          Swal.fire('Guardado', 'La cita ha sido actualizada', 'success');
+        })
+        .catch(error => {
+          console.error('Error updating appointment:', error);
+          Swal.fire('Error', 'No se pudo actualizar la cita', 'error');
+        });
       }
     });
   };
@@ -143,11 +160,24 @@ const AppointmentView = () => {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        const updatedAppointments = appointments.map(a => 
-          a.id === appointment.id ? { ...a, estado: 'Finalizada' } : a
-        );
-        setAppointments(updatedAppointments);
-        Swal.fire('Finalizada!', 'La cita ha sido marcada como finalizada y movida al historial.', 'success');
+        axios.put('http://localhost:3000/api/medicalAppoinet/', {
+          citaID: appointment.citaID,
+          estado: 'Finalizada'
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => {
+          setAppointments(appointments.map(a => 
+            a.citaID === appointment.citaID ? { ...a, estado: 'Finalizada' } : a
+          ));
+          Swal.fire('Finalizada!', 'La cita ha sido marcada como finalizada.', 'success');
+        })
+        .catch(error => {
+          console.error('Error updating appointment:', error);
+          Swal.fire('Error', 'No se pudo finalizar la cita', 'error');
+        });
       }
     });
   };
@@ -182,7 +212,7 @@ const AppointmentView = () => {
           </thead>
           <tbody>
             {appointments.map((appointment, index) => (
-              <TableRow key={appointment.id}>
+              <TableRow key={appointment.citaID}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{appointment.names}</TableCell>
                 <TableCell>{new Date(appointment.fecha).toLocaleDateString()}</TableCell>
